@@ -1,67 +1,78 @@
-// Get the chat container element
-const chatContainer = document.querySelector('.chat-container');
+// Get the input field and button from the HTML
+const inputField = document.querySelector("input[type='text']");
+const sendButton = document.querySelector("button");
 
-// Create a function to add a new message to the chat body
-function addMessageToChat(message, sender) {
-  // Create a new message element
-  const messageElement = document.createElement('div');
-  messageElement.classList.add('chat-message', `${sender}-message`);
+// Add an event listener to the send button
+sendButton.addEventListener("click", sendMessage);
 
-  // Create a new paragraph element to hold the message text
-  const messageText = document.createElement('p');
-  messageText.textContent = message;
+// Define a function to send messages
+function sendMessage() {
+  // Get the value of the input field
+  const message = inputField.value;
 
-  // Add the message text to the message element
-  messageElement.appendChild(messageText);
+  // Create a new chat message element
+  const chatMessage = document.createElement("div");
+  chatMessage.classList.add("chat-message", "user-message");
+  chatMessage.innerHTML = `<p>${message}</p>`;
 
-  // Add the message element to the chat body
-  const chatBody = chatContainer.querySelector('.chat-body');
-  chatBody.appendChild(messageElement);
+  // Add the chat message element to the chat body
+  const chatBody = document.querySelector(".chat-body");
+  chatBody.appendChild(chatMessage);
 
-  // Scroll to the bottom of the chat body
-  chatBody.scrollTop = chatBody.scrollHeight;
-}
+  // Clear the input field
+  inputField.value = "";
 
-// Create a function to handle user input
-function handleUserInput() {
-  const userInput = document.querySelector('.chat-footer input[type="text"]');
-  const message = userInput.value.trim();
+  // Check if the message is a pre-written question
+  if (message === "What is your name?") {
+    // Create a pre-written answer
+    const answer = "My name is ChatGPT. How can I help you today?";
 
-  // Check if the user input is not empty
-  if (message !== '') {
-    // Add the user message to the chat body
-    addMessageToChat(message, 'user');
+    // Create a new chat message element for the answer
+    const chatbotMessage = document.createElement("div");
+    chatbotMessage.classList.add("chat-message", "chatbot-message");
+    chatbotMessage.innerHTML = `<p>${answer}</p>`;
 
-    // Clear the user input field
-    userInput.value = '';
+    // Add the chatbot message element to the chat body after a short delay
+    setTimeout(() => {
+      chatBody.appendChild(chatbotMessage);
+    }, 1000);
+  } else if (message === "What is your favorite color?") {
+    // Create a pre-written answer
+    const answer = "I'm sorry, as an AI language model, I don't have a favorite color.";
 
-    // Send the user message to the chatbot
-    sendUserMessageToChatbot(message);
+    // Create a new chat message element for the answer
+    const chatbotMessage = document.createElement("div");
+    chatbotMessage.classList.add("chat-message", "chatbot-message");
+    chatbotMessage.innerHTML = `<p>${answer}</p>`;
+
+    // Add the chatbot message element to the chat body after a short delay
+    setTimeout(() => {
+      chatBody.appendChild(chatbotMessage);
+    }, 1000);
+  } else {
+    // Create a default response
+    const answer = "I'm sorry, I don't understand. Can you please rephrase or ask another question?";
+
+    // Create a new chat message element for the default response
+    const chatbotMessage = document.createElement("div");
+    chatbotMessage.classList.add("chat-message", "chatbot-message");
+    chatbotMessage.innerHTML = `<p>${answer}</p>`;
+
+    // Add the chatbot message element to the chat body after a short delay
+    setTimeout(() => {
+      chatBody.appendChild(chatbotMessage);
+    }, 1000);
   }
 }
 
-// Create a function to send the user message to the chatbot
-function sendUserMessageToChatbot(message) {
-  // Simulate a delay before receiving the chatbot response
-  setTimeout(() => {
-    // Generate a random response from the chatbot
-    const responses = ['I am not sure what you mean.', 'Could you please rephrase your question?', 'That is a great question!', 'I will need to look into that.'];
-    const randomIndex = Math.floor(Math.random() * responses.length);
-    const response = responses[randomIndex];
-
-    // Add the chatbot response to the chat body
-    addMessageToChat(response, 'chatbot');
-  }, 1000);
-}
-
-// Add an event listener to the send button to handle user input
-const sendButton = document.querySelector('.chat-footer button');
-sendButton.addEventListener('click', handleUserInput);
-
-// Add an event listener to the user input field to handle user input on Enter key press
-const userInput = document.querySelector('.chat-footer input[type="text"]');
-userInput.addEventListener('keypress', (event) => {
-  if (event.key === 'Enter') {
-    handleUserInput();
-  }
-});
+    // get the chat body element
+    const chatBody = document.querySelector('.chat-body');
+    
+    // auto-scroll to the bottom of the chat body
+    chatBody.scrollTop = chatBody.scrollHeight;
+    
+    // add an event listener to the chat body to auto-scroll when it is updated
+    chatBody.addEventListener('DOMNodeInserted', event => {
+    const { currentTarget: target } = event;
+    target.scrollTop = target.scrollHeight;
+    });
